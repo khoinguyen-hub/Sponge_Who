@@ -27,8 +27,6 @@ class Character(Base):
 	id = Column(Integer(), primary_key = True)
 	name = Column(String(99))
 
-
-
 if __name__ =="__main__":
 	engine = create_engine('sqlite:///PDB.db')
 	Base.metadata.create_all(bind = engine)
