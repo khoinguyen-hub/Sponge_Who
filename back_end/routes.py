@@ -1,3 +1,6 @@
+#Seak Yith
+#Add routes for home and future pages
+
 from flask import Flask, request, render_template
 from . import app
 
