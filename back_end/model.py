@@ -62,7 +62,7 @@ class quotes(db.Model):# Stores information regarding character quotes
     id=db.Column(db.Integer(),primary_key=True)
     ep_id=db.Column(db.Integer, db.ForeignKey('Episodes.id'),nullable=False)
     l_num=db.Column(db.Integer())
-    char=db.Column(db.Integer, db.ForeignKey('Characters.id'),nullable=False)
+    char_id=db.Column(db.Integer, db.ForeignKey('Characters.id'),nullable=False)
     quote=db.Column(db.String())
 
     def __init__(self,ep_id:int,l_num:int,character:int,quote:str):
