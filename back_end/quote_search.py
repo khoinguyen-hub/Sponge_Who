@@ -91,10 +91,11 @@ def main():
     newdict = cleanDict(dict)
     populateDatabaseCharacters(newdict)
     populateDatabaseQuotes(newdict)
-    # print("Please enter a quote from spongebob:\n")
-    # user_input = input()
-    # result = quotes.query.filter(quotes.quote.contains(user_input))
-    # print(result)
+    print("Please enter a quote from spongebob:\n")
+    user_input = input()
+    result = quotes.query.filter(quotes.quote.contains(user_input)).all()
+    for x in result:
+        print(str(x.character.name) + ": " + x.quote)
 if __name__=='__main__':
     main()
 
