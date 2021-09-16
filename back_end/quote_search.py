@@ -25,40 +25,42 @@ def parseTextFile():
                     count += 1
     return transcript_dict
 
-def populateDatabase(dict):
+def cleanDict(dict):
+    newdict = {}
     for key, items in dict.items():
-        if items[1].endswith('\n'):
-            string = items[1]
-            character = characters(items[0])
-            missing = characters.query.filter_by(name=items[0]).first()
-            if missing is None:
-                db.session.add(character)
-                db.session.commit()
-                missing = characters.query.filter_by(name=items[0]).first()
-                quote = quotes(1, key, missing.id, string[:-1])
-                db.session.add(quote)
-                db.session.commit()
-            else:
-                missing = characters.query.filter_by(name=items[0]).first()
-                quote = quotes(1, key, missing.id, string[:-1])
-                db.session.add(quote)
-                db.session.commit()
+        for x in items[1]:
+            if x == "\n":
+                string = items[1].strip("\n")
+                items[1] = string
+            elif x == "/":
+                string = items[1].strip("\n")
+                items[1] = string
+        newdict[key] = items
+        for x in items[0]:
+            if x == '(':
+                string = items[0].split(' ') 
+                items[0] = string[0]
+                newdict[key] = items
         else:
-            character = characters(items[0])
-            missing = characters.query.filter_by(name=items[0]).first()
-            if missing is None:
-                db.session.add(character)
-                db.session.commit()
-                missing = characters.query.filter_by(name=items[0]).first()
-                quote = quotes(1, key, missing.id, string[:-1])
-                db.session.add(quote)
-                db.session.commit()
-            else:
-                missing = characters.query.filter_by(name=items[0]).first()
-                quote = quotes(1, key, missing.id, string[:-1])
-                db.session.add(quote)
-                db.session.commit()
-            
+            newdict[key] = items
+    return newdict
+
+def populateDatabaseCharacters(dict):
+    for key, items in dict.items():
+        character = characters(items[0])
+        missing = characters.query.filter_by(name=items[0]).first()
+        if missing is None:
+            db.session.add(character)
+            db.session.commit()
+
+def populateDatabaseQuotes(dict):
+    for key, items in dict.items():
+        string = items[1]
+        character = characters.query.filter_by(name=items[0]).first()
+        quote = quotes(1, key, (int(character.id)), string)
+        db.session.add(quote)
+        db.session.commit()
+
 # use user input to search
 # def search(userinput, dict):
 #     newdict = {}
@@ -70,8 +72,11 @@ def populateDatabase(dict):
 def main():
     db.create_all()
     dict = parseTextFile()
-    populateDatabase(dict)
-    print((characters.query.all()))
+    newdict = cleanDict(dict)
+    populateDatabaseCharacters(newdict)
+    populateDatabaseQuotes(newdict)
+    print(characters.query.all())
+    print(quotes.query.all())
     # print("Please enter a quote from spongebob:\n")
     # user_input = input()
     
