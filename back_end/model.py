@@ -62,9 +62,11 @@ class quotes(db.Model):# Stores information regarding character quotes
     id=db.Column(db.Integer(),primary_key=True)
     ep_id=db.Column(db.Integer, db.ForeignKey('Episodes.id'),nullable=False)
     l_num=db.Column(db.Integer())
-    char=db.Column(db.Integer, db.ForeignKey('Characters.id'),nullable=False)
+    char_id=db.Column(db.Integer, db.ForeignKey('Characters.id'),nullable=False)
     quote=db.Column(db.String())
 
+    episode=db.relationship("episodes",foreign_keys=[ep_id])
+    character=db.relationship("characters",foreign_keys=[char_id])
     def __init__(self,ep_id:int,l_num:int,character:int,quote:str):
         """Initialization for "quotes" sqlobject, requires(ep_id:int,l_num:int,character:int,quote:str)"""
         self.ep_id=ep_id
@@ -115,17 +117,31 @@ def main():
             elif arg=='populatedb':
                 print('populating database')
                 # using quote_search as a cheeky parser
-                import quote_search as qf
-                qf.populate_fake_database()
-                for line in qf.Fake_Database:
-                    # Parse into sqlalchemy models as defined above
-                    # db.session.add(new object)
-                    print(line)
-                # db.session.commit()# commit objects to database
+                print('populating database')
+                mc=characters('spongebob')
+                print(mc)
+                db.session.add(mc)
+                db.session.commit()
+                print(mc)
+                ep=episodes(1,1,1,'epname','desc')
+                print(ep)
+                db.session.add(ep)
+                db.session.commit()
+                print(ep)
+                print(ep.id,mc.id)
+                q=quotes(ep.id,15,mc.id,'the user quote')
+                print(q)
+                db.session.add(q)
+                db.session.commit()
+                print(q)
+                print(q.character,q.episode)
             elif arg=='peek':# peek at database entries
                 print('peeking at db')
                 # currently only characters added
                 print((characters.query.all()))
+                print((episodes.query.all()))
+                print((quotes.query.all()))
+                print(quotes.query.all()[0].episode)
     else:
         print('avaliable parameters: createdb, populatedb, peek')
 
