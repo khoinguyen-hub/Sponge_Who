@@ -1,9 +1,20 @@
 # Khoi Nguyen
 # 9/9/2021
-# work on retrieving user's input and compare with database's entry
-# to return the speaker of the quote
+# work on retrieving user's input
+# parse and clean up text files 
+# populating databases
+# return the speaker of the quote using user's input and query
+
+#imports
 from model import *
 
+# Function to parse text file into a dictionary
+#  -key is line number
+#  -value is a list of 2 values
+#  -value[0] is speaker
+#  -value[1] is quote
+#  -still have junks in text files
+#  -not yet finished, only parse one file
 def parseTextFile():
     key = 0
     transcript_dict = {}
@@ -25,6 +36,9 @@ def parseTextFile():
                     count += 1
     return transcript_dict
 
+# Function to clean up junks from parsed files and return cleaned dictionary
+#  -remove any unwanted characters and strings
+#  -unfinished, still missing junk options
 def cleanDict(dict):
     newdict = {}
     for key, items in dict.items():
@@ -33,7 +47,7 @@ def cleanDict(dict):
                 string = items[1].strip("\n")
                 items[1] = string
             elif x == "/":
-                string = items[1].strip("\n")
+                string = items[1].strip("/")
                 items[1] = string
         newdict[key] = items
         for x in items[0]:
@@ -45,6 +59,7 @@ def cleanDict(dict):
             newdict[key] = items
     return newdict
 
+# Function to populate characters table
 def populateDatabaseCharacters(dict):
     for key, items in dict.items():
         character = characters(items[0])
@@ -53,11 +68,12 @@ def populateDatabaseCharacters(dict):
             db.session.add(character)
             db.session.commit()
 
+# Function to populate Quotes table
 def populateDatabaseQuotes(dict):
     for key, items in dict.items():
         string = items[1]
         character = characters.query.filter_by(name=items[0]).first()
-        quote = quotes(1, key, (int(character.id)), string)
+        quote = quotes(1, key, character.id, string)
         db.session.add(quote)
         db.session.commit()
 
@@ -75,11 +91,10 @@ def main():
     newdict = cleanDict(dict)
     populateDatabaseCharacters(newdict)
     populateDatabaseQuotes(newdict)
-    print(characters.query.all())
-    print(quotes.query.all())
     # print("Please enter a quote from spongebob:\n")
     # user_input = input()
-    
+    # result = quotes.query.filter(quotes.quote.contains(user_input))
+    # print(result)
 if __name__=='__main__':
     main()
 
