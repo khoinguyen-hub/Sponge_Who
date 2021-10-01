@@ -7,6 +7,7 @@
 
 #imports
 from model import *
+import os
 
 # Function to parse text file into a dictionary
 #  -key is line number
@@ -18,22 +19,26 @@ from model import *
 def parseTextFile():
     key = 0
     transcript_dict = {}
-    with open("C:\\Users\Admin\Downloads\CPSC362\Sponge_Who\\back_end\Tea_at_the_Treedome.txt") as infl:
-        for line in infl:
-            count = 0
-            line.strip()
-            for string in line:
-                if string == ":":
-                    transcript_dict[key] = line.split(":")
-                    key += 1
-                    break
-                elif string == "[" and count == 0:
-                    key += 1
-                    break
-                elif string == "\n":
-                    continue
-                else:
-                    count += 1
+    folder = r'C:\Users\Admin\Downloads\CPSC362\Sponge_Who\back_end\SpongeBob_SquarePants_Transcripts'
+    for path, dirc, files in os.walk(folder):
+        for filename in files:
+            print(filename)
+            with open(path + os.sep + filename, encoding="utf8") as file:
+                for line in file:
+                    count = 0
+                    line.strip()
+                    for string in line:
+                        if string == ":":
+                            transcript_dict[key] = line.split(":")
+                            key += 1
+                            break
+                        elif string == "[" and count == 0:
+                            key += 1
+                            break
+                        elif string == "\n":
+                            continue
+                        else:
+                            count += 1
     return transcript_dict
 
 # Function to clean up junks from parsed files and return cleaned dictionary
@@ -61,21 +66,27 @@ def cleanDict(dict):
 
 # Function to populate characters table
 def populateDatabaseCharacters(dict):
+    print('start to populate character data')
     for key, items in dict.items():
         character = characters(items[0])
         missing = characters.query.filter_by(name=items[0]).first()
         if missing is None:
             db.session.add(character)
             db.session.commit()
+            print('populating character '+str(key))
+    print('populated characters')
 
 # Function to populate Quotes table
 def populateDatabaseQuotes(dict):
+    print('start to populate quote data')
     for key, items in dict.items():
         string = items[1]
         character = characters.query.filter_by(name=items[0]).first()
         quote = quotes(1, key, character.id, string)
         db.session.add(quote)
         db.session.commit()
+        print('populating quote '+str(key))
+    print('populated quotes')
 
 # use user input to search
 # def search(userinput, dict):
@@ -96,6 +107,7 @@ def main():
     result = quotes.query.filter(quotes.quote.contains(user_input)).all()
     for x in result:
         print(str(x.character.name) + ": " + x.quote)
+
 if __name__=='__main__':
     main()
 
