@@ -1,0 +1,41 @@
+/* author: Daniel Nazeri
+*/
+
+h1{
+    font-family:Some Time Later;
+    font-size:5em;
+    margin:0.5em;
+}
+
+p{
+    color:white;
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size:1.3em;
+    margin:2em;
+}
+
+body{
+    margin:3em;
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+    background-color:#211E93;
+}
+
+#box1{
+    width:90%;
+    height:50%;
+    margin:auto;
+    margin-top:0em;
+    padding:1em;
+    background:url(spongebobpattern.png) repeat;
+    border-radius:20px;
+}
+
+input[type=submit]{
+    font-family:"Trebuchet MS", sans-serif;
+    font-size:1em;
+    height:1.8em;
+    width:auto;
+    padding-left:0.7em;
+    padding-right:0.7em;
+    background:white;
+}
