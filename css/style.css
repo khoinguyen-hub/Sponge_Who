@@ -1,10 +1,16 @@
 /* author: Daniel Nazeri
 */
 
+@font-face {
+    font-family: stl;
+    src: url(Some\ Time\ Later.otf);
+}
+
 h1{
-    font-family:Some Time Later;
-    font-size:5em;
+    font-family: stl;
+    font-size:5.5em;
     margin:0.5em;
+    color: #99ffff;
 }
 
 p{
@@ -26,8 +32,9 @@ body{
     margin:auto;
     margin-top:0em;
     padding:1em;
-    background:url(spongebobpattern.png) repeat;
+    background: url("images/resultsbgpattern.png"), repeat;
     border-radius:20px;
+    font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
 }
 
 input[type=submit]{
