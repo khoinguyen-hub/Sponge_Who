@@ -44,17 +44,17 @@ class episodes(db.Model):# Stores information regarding episodes
     episode=db.Column(db.Integer())
     minor_ep=db.Column(db.Integer())
     ep_name=db.Column(db.String())
-    ep_des=db.Column(db.String())
+    ep_filename=db.Column(db.String())
 
-    def __init__(self,season,episode,minor,name,description):
-        """Initialization for "episodes" sqlobject, requires(season:int,episode:int,minor:int,name:str,description:str)"""
+    def __init__(self,season,episode,minor,name,filename):
+        """Initialization for "episodes" sqlobject, requires(season:int,episode:int,minor:int,name:str,filename:str)"""
         self.season=season
         self.episode=episode
         self.minor_ep=minor
         self.ep_name=name
-        self.ep_des=description
+        self.ep_filename=filename
     def __repr__(self):
-        return '<{}:{} #{}>'.format(self.__tablename__,(self.season,self.episode,self.minor_ep,self.ep_name,self.ep_des),self.id)
+        return '<{}:{} #{}>'.format(self.__tablename__,(self.season,self.episode,self.minor_ep,self.ep_name,self.ep_filename),self.id)
 
 class quotes(db.Model):# Stores information regarding character quotes
     """SQLAlchemy model quotes"""
@@ -123,7 +123,7 @@ def main():
                 db.session.add(mc)
                 db.session.commit()
                 print(mc)
-                ep=episodes(1,1,1,'epname','desc')
+                ep=episodes(1,1,1,'epname','filename')
                 print(ep)
                 db.session.add(ep)
                 db.session.commit()
