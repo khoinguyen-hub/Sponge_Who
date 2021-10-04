@@ -6,7 +6,7 @@
 # return the speaker of the quote using user's input and query
 
 #imports
-from model import *
+from back_end.model import *
 import os
 
 # Function to parse text file into a dictionary
@@ -19,7 +19,7 @@ import os
 def parseTextFile():
     key = 0
     transcript_dict = {}
-    folder = r'C:\Users\Admin\Downloads\CPSC362\Sponge_Who\back_end\SpongeBob_SquarePants_Transcripts'
+    folder = r'/Users/seakyith/Documents/GitHub/Sponge_Who/back_end/SpongeBob_SquarePants_Transcripts'
     for path, dirc, files in os.walk(folder):
         for filename in files:
             print(filename)
