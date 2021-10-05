@@ -32,7 +32,7 @@ body{
     margin:auto;
     margin-top:0em;
     padding:1em;
-    background: url("images/resultsbgpattern.png"), repeat;
+    background: url('/static/resultsbgpattern.png'), repeat;
     border-radius:20px;
     font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
 }
