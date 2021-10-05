@@ -28,14 +28,16 @@ def quote_generator():
             # populateDatabaseQuotes(newdict)
             ###
             result = quotes.query.filter(quotes.quote.contains(query)).all()
-            character = characters.query.filter_by(name = query).first()
-            print("The qoute is " + str(result[0].quote))
-            print("The Character is " + str(result[0].character.name))
+            #character = characters.query.filter_by(name = query).first()
+            character = result[0].character.name
+            actualQuote = result[0].quote
+            print("The qoute is " + str(actualQuote))
+            print("The Character is " + str(character))
             # for x in result:
             #     #print(str(x.character.name) + ": " + x.quote)
             #     print((characters.query.all()))
             #     print((episodes.query.all()))
-            return render_template('results.html')## might need to change html name
+            return render_template('results.html', characterName=character, line=actualQuote)## might need to change html name
         else:
             return render_template("home.html") 
     else:  ## get method 
