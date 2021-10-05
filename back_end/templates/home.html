@@ -1,0 +1,58 @@
+<!-- author: Omar Mughal -->
+<html>
+    <head>
+        <title>Sponge Who?</title>
+        <style type="text/css">
+            @font-face{font-family:Some Time Later;src:url('Some Time Later.otf');}
+            h1{
+                color:white;
+                font-family:Some Time Later;
+                font-size:5em;
+                margin:0.5em;
+            }
+            p{
+                color:white;
+                font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+                font-size:1.3em;
+                margin:2em;
+            }
+            body{
+                margin:3em;
+                font-family:"Trebuchet MS", Arial, Helvetica, sans-serif
+            }
+            #box1{
+                width:90%;
+                height:50%;
+                margin:auto;
+                margin-top:0em;
+                padding:1em;
+                background:url('/static/spongebobpattern.png') repeat;
+                border-radius:20px;
+            }
+            input[type=submit]{
+                font-family:"Trebuchet MS", sans-serif;
+                font-size:1em;
+                height:1.8em;
+                width:auto;
+                padding-left:0.7em;
+                padding-right:0.7em;
+                background:white;
+            }
+        </style>
+    </head>
+    <body style="background-color:#3e7a66">
+        <container>
+            <row>
+                <img src="/static/spongebobpeek.png" width="200" height=auto style="margin-left:auto;margin-right:auto;display:block">
+                <div id="box1">
+                <center><h1>Sponge Who?</h1></center>
+		      <center><p>Enter a word or phrase to find a related quote from a SpongeBob episode.</p></center>
+        <form action={{url_for("quote_generator")}} method="post" novalidate>
+            <center><input type="text" id="quote" name="query" style="height:1.8em;width:auto;font-size:1em;margin-right:1em">
+            <input type="submit" value="Search"></center>
+        </form> 
+                </div>
+            </row>
+        </container>
+    </body>
+</html>
