@@ -19,7 +19,7 @@ import os
 def parseTextFile():
     key = 0
     transcript_dict = {}
-    folder = r'/Users/seakyith/Documents/GitHub/Sponge_Who/back_end/SpongeBob_SquarePants_Transcripts'
+    folder = r'/back_end/SpongeBob_SquarePants_Transcripts'
     for path, dirc, files in os.walk(folder):
         for filename in files:
             print(filename)
