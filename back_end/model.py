@@ -10,12 +10,13 @@
 
 # Notes:
 # -Full linting style and document not provided
+# -Now requires sqlalchemy db URI from environment variable 'SQLALCHEMY_DATABASE_URI'
 
-#
 # Imports:
 from sys import argv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from os import environ
 
 
 # Directive:
@@ -32,7 +33,7 @@ if 'app' not in dir():# set the app if run alone (not actually sure if this work
 # configurations
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False# remove tracking overhead
 # set the name and path to the database
-app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///sqlite3_Sponge_Who.db'
+app.config['SQLALCHEMY_DATABASE_URI']=environ['SQLALCHEMY_DATABASE_URI']# may autoset
 db=SQLAlchemy(app)
 
 
@@ -43,7 +44,7 @@ class episodes(db.Model):# Stores information regarding episodes
     season=db.Column(db.Integer())
     episode=db.Column(db.Integer())
     minor_ep=db.Column(db.Integer())
-    ep_name=db.Column(db.String())
+    ep_name=db.Column(db.String(),unique=True)# unique check
     ep_filename=db.Column(db.String())
 
     def __init__(self,season,episode,minor,name,filename):
