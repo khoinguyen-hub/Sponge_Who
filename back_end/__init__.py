@@ -21,14 +21,13 @@ def quote_generator():
         query = request.form['query']
         if query:
             ### need to run these code on the first set up
-            # db.create_all()
-            # dict = parseTextFile()
-            # newdict = cleanDict(dict)
-            # populateDatabaseCharacters(newdict)
-            # populateDatabaseQuotes(newdict)
+            db.create_all()
+            dict = parseTextFile()
+            newdict = cleanDict(dict)
+            populateDatabaseCharacters(newdict)
+            populateDatabaseQuotes(newdict)
             ###
             result = quotes.query.filter(quotes.quote.contains(query)).all()
-            #character = characters.query.filter_by(name = query).first()
             character = result[0].character.name
             actualQuote = result[0].quote
             print("The qoute is " + str(actualQuote))
