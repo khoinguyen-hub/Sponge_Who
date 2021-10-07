@@ -1,6 +1,6 @@
-// Dawei Chen
-// local database creation
-// early databse schema design
+# Dawei Chen
+# local database creation
+# early databse schema design
 
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
