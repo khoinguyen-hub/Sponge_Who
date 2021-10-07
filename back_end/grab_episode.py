@@ -68,7 +68,8 @@ def get_episode_info(filelist:list,logging=True):
 
         if fname.lower()+'.txt' in linkeys:# reverse query to avoid key error
             fname=filelink[fname.lower()+'.txt']
-            episodes[fname]={'Name':name,'Season':season,'Episode':episode,'Minor':minor}.update(upd)
+            episodes[fname]={'Name':name,'Season':season,'Episode':episode,'Minor':minor}
+            episodes[fname].update(upd)# apply update for fixups
         elif logging:
             mtc+=1
             missing_transcripts+='#{} : {} -> {}\n'.format(tag.text,name,fname)
