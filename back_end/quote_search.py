@@ -19,7 +19,8 @@ import os
 def parseTextFile():
     key = 0
     transcript_dict = {}
-    folder = r'/back_end/SpongeBob_SquarePants_Transcripts'
+    # change local path depends on your file path
+    folder = r'SpongeBob_SquarePants_Transcripts'
     for path, dirc, files in os.walk(folder):
         for filename in files:
             print(filename)
@@ -29,7 +30,9 @@ def parseTextFile():
                     line.strip()
                     for string in line:
                         if string == ":":
-                            transcript_dict[key] = line.split(":")
+                            value = line.split(":", 1)
+                            value.append(filename)
+                            transcript_dict[key] = value
                             key += 1
                             break
                         elif string == "[" and count == 0:
@@ -72,8 +75,8 @@ def populateDatabaseCharacters(dict):
         missing = characters.query.filter_by(name=items[0]).first()
         if missing is None:
             db.session.add(character)
-            db.session.commit()
             print('populating character '+str(key))
+    db.session.commit()
     print('populated characters')
 
 # Function to populate Quotes table
@@ -82,28 +85,27 @@ def populateDatabaseQuotes(dict):
     for key, items in dict.items():
         string = items[1]
         character = characters.query.filter_by(name=items[0]).first()
-        quote = quotes(1, key, character.id, string)
+        episode = episodes.query.filter_by(ep_filename=items[2]).first()
+        quote = quotes(episode.id, key, character.id, string)
         db.session.add(quote)
-        db.session.commit()
         print('populating quote '+str(key))
+    db.session.commit()
     print('populated quotes')
 
 # For testing
 # def main():
-#     # Uncomment this and run it on first set up for testing.
-#     # db.create_all()
-#     # dict = parseTextFile()
-#     # newdict = cleanDict(dict)
-#     # populateDatabaseCharacters(newdict)
-#     # populateDatabaseQuotes(newdict)
+    # Uncomment this and run it on first set up for testing.
+    # db.create_all()
+    # dict = parseTextFile()
+    # newdict = cleanDict(dict)
+    # populateDatabaseCharacters(newdict)
+    # populateDatabaseQuotes(newdict)
 
-#     print("Please enter a quote from spongebob:\n")
-#     user_input = input()
-#     result = quotes.query.filter(quotes.quote.contains(user_input)).all()
-#     for x in result:
-#         print(str(x.character.name) + ": " + x.quote)
+    # print("Please enter a quote from spongebob:\n")
+    # user_input = input()
+    # result = quotes.query.filter(quotes.quote.contains(user_input)).all()
+    # for x in result:
+    #     print("Season: " + str(x.episode.season) + " ep: " + str(x.episode.episode) + " title: " + x.episode.ep_name + str(x.character.name) + ": " + x.quote)
 
 # if __name__=='__main__':
 #     main()
-
-
