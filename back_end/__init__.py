@@ -3,8 +3,8 @@
 
 from flask import Flask, request, render_template
 from flask_sqlalchemy import SQLAlchemy
-from back_end.quote_search import *
-from back_end.model import *
+from quote_search import *
+from model import *
 app = Flask(__name__)
 
 print(__name__)
@@ -21,17 +21,17 @@ def quote_generator():
         query = request.form['query']
         if query:
             ### need to run these code on the first set up
-            db.create_all()
-            dict = parseTextFile()
-            newdict = cleanDict(dict)
-            populateDatabaseCharacters(newdict)
-            populateDatabaseQuotes(newdict)
+            # db.create_all()
+            # dict = parseTextFile()
+            # newdict = cleanDict(dict)
+            # populateDatabaseCharacters(newdict)
+            # populateDatabaseQuotes(newdict)
             ###
             result = quotes.query.filter(quotes.quote.contains(query)).all()
             character = result[0].character.name
             actualQuote = result[0].quote
-            print("The qoute is " + str(actualQuote))
-            print("The Character is " + str(character))
+            print("The quote is " + str(actualQuote))
+            print("The character is " + str(character))
             # for x in result:
             #     #print(str(x.character.name) + ": " + x.quote)
             #     print((characters.query.all()))

@@ -6,7 +6,7 @@
 # return the speaker of the quote using user's input and query
 
 #imports
-from back_end.model import *
+from model import *
 import os
 
 # Function to parse text file into a dictionary
@@ -88,27 +88,22 @@ def populateDatabaseQuotes(dict):
         print('populating quote '+str(key))
     print('populated quotes')
 
-# use user input to search
-# def search(userinput, dict):
-#     newdict = {}
-#     for x, y in dict.items():
-#         if userinput in y[1]:
-#             newdict[x] = y
-#     return newdict
+# For testing
+# def main():
+#     # Uncomment this and run it on first set up for testing.
+#     # db.create_all()
+#     # dict = parseTextFile()
+#     # newdict = cleanDict(dict)
+#     # populateDatabaseCharacters(newdict)
+#     # populateDatabaseQuotes(newdict)
 
-def main():
-    db.create_all()
-    dict = parseTextFile()
-    newdict = cleanDict(dict)
-    populateDatabaseCharacters(newdict)
-    populateDatabaseQuotes(newdict)
-    print("Please enter a quote from spongebob:\n")
-    user_input = input()
-    result = quotes.query.filter(quotes.quote.contains(user_input)).all()
-    for x in result:
-        print(str(x.character.name) + ": " + x.quote)
+#     print("Please enter a quote from spongebob:\n")
+#     user_input = input()
+#     result = quotes.query.filter(quotes.quote.contains(user_input)).all()
+#     for x in result:
+#         print(str(x.character.name) + ": " + x.quote)
 
-if __name__=='__main__':
-    main()
+# if __name__=='__main__':
+#     main()
 
 
