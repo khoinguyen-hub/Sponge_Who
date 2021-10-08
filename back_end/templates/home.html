@@ -3,7 +3,7 @@
     <head>
         <title>Sponge Who?</title>
         <style type="text/css">
-            @font-face{font-family:Some Time Later;src:url("/static/Some Time Later.otf");}
+            @font-face{font-family:Some Time Later;src:url("Some Time Later.otf");}
             h1{
                 color:white;
                 font-family:Some Time Later;
@@ -25,8 +25,18 @@
                 height:50%;
                 margin:auto;
                 margin-top:0em;
+                margin-bottom:1em;
                 padding:1em;
-                background:url('/static/spongebobpattern.png') repeat;
+                background:url('spongebobpattern.png') repeat;
+                border-radius:20px;
+            }
+            #box2{
+                width:90%;
+                height:20%;
+                margin-top:1em;
+                margin:auto;
+                padding:1em;
+                background:#034f3f;
                 border-radius:20px;
             }
             input[type=submit]{
@@ -40,10 +50,10 @@
             }
         </style>
     </head>
-    <body style="background-color:#3e7a66">
-        <container>
-            <row>
-                <img src="/static/spongebobpeek.png" width="200" height=auto style="margin-left:auto;margin-right:auto;display:block">
+    <body style="background-image: linear-gradient(#116447,#137352,#116447)">
+        <div id="container">
+            <div id="row">
+                <img src="spongebobpeek.png" width="200" height=auto style="margin-left:auto;margin-right:auto;display:block">
                 <div id="box1">
                 <center><h1>Sponge Who?</h1></center>
 		      <center><p>Enter a word or phrase to find a related quote from a SpongeBob episode.</p></center>
@@ -52,7 +62,15 @@
             <input type="submit" value="Search"></center>
         </form> 
                 </div>
-            </row>
-        </container>
+            </div>
+        </div>
+        <div id="container">
+            <div id="row">
+                <div id="box2">
+                    <center><p>Quote of the day: “If you believe in yourself and with a tiny pinch of magic, all your dreams can come true.”</p></center>
+                </div>
+            </div>
+        </div>
+        <div 
     </body>
 </html>
