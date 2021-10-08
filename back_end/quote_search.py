@@ -6,7 +6,7 @@
 # return the speaker of the quote using user's input and query
 
 #imports
-from model import *
+from .model import *
 import os
 
 # Function to parse text file into a dictionary

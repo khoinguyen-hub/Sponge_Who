@@ -15,7 +15,7 @@
 # Imports:
 import re # regular expressions
 import requests # request webpage if not present
-from model import * # grab model
+from .model import * # grab model
 from os import listdir, environ # compare to files, enviornment variables
 from os.path import isfile # check for existing file
 from bs4 import BeautifulSoup as BS # Pase information out of htmlpage

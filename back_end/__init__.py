@@ -3,8 +3,8 @@
 
 from flask import Flask, request, render_template
 from flask_sqlalchemy import SQLAlchemy
-from quote_search import *
-from model import *
+from .quote_search import *
+from .model import *
 app = Flask(__name__)
 
 print(__name__)
