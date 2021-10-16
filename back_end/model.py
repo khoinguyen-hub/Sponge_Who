@@ -17,6 +17,7 @@ from sys import argv
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import environ
+from datetime import datetime
 
 
 # Directive:
@@ -68,6 +69,7 @@ class quotes(db.Model):# Stores information regarding character quotes
 
     episode=db.relationship("episodes",foreign_keys=[ep_id])
     character=db.relationship("characters",foreign_keys=[char_id])
+    logging=db.relationship("quote_logging", backref='quotes',primaryjoin="quotes.id == quote_logging.id")
     def __init__(self,ep_id:int,l_num:int,character:int,quote:str):
         """Initialization for "quotes" sqlobject, requires(ep_id:int,l_num:int,character:int,quote:str)"""
         self.ep_id=ep_id
@@ -75,7 +77,7 @@ class quotes(db.Model):# Stores information regarding character quotes
         self.char_id=character
         self.quote=quote
     def __repr__(self):
-        return '<{}:{} #{}>'.format(self.__tablename__,(self.l_num,self.char_id,self.quote),self.id)
+        return '<{}:{} Log:{} #{}>'.format(self.__tablename__,(self.l_num,self.char_id,self.quote),self.logging,self.id)
 
 class characters(db.Model):# Stores information for characters, may require pseudoname parsing
     """SQLAchemy model characters"""
@@ -90,6 +92,37 @@ class characters(db.Model):# Stores information for characters, may require pseu
         return '<{}:{} #{}>'.format(self.__tablename__,self.name,self.id)
 
 # The following models are experimental
+
+class quote_logging(db.Model):
+    """quote_logging"""
+    __tablename__='Quote_logging'
+    id=db.Column(db.Integer(), db.ForeignKey('Quotes.id'),primary_key=True,nullable=False)
+    searches=db.Column(db.Integer)
+    last_call=db.Column(db.DateTime)
+
+    def __init__(self, quote_id, start_num=1):
+        """Initialization for "quote_logging" sqlobject, requires(quote.id), optional start_num for initial count"""
+        self.id=quote_id
+        self.searches=start_num
+        if not self.searches:# don't push time if generic start
+            self.last_call=datetime.now()
+    def __repr__(self):
+        return '<{}: searches:{} {} #{}>'.format(self.__tablename__,self.searches,self.last_call,self.id)
+
+    def inc(self):
+        """Increments quote logging"""
+        self.searches+=1
+        self.last_call=datetime.now()
+    def get_last_call(self):# might implement str conversion
+        """Returns timedate of last query"""
+        return self.last_call
+    def time_since_last_call(self):
+        """Returns timedate.delta of last query"""
+        return datetime.now()-self.last_call
+    def get_searches(self):
+        """Returns number of searches"""
+        return self.searches
+
 class user_query(db.Model):
     """User_query"""# store information regarding queries and user feedback?
     __tablename__='User_querys'
@@ -115,36 +148,26 @@ def main():
                 print('creating database')
                 db.create_all()#create schemea
                 print('db should be created')
-            elif arg=='populatedb':
-                print('populating database')
-                # using quote_search as a cheeky parser
-                print('populating database')
-                mc=characters('spongebob')
-                print(mc)
-                db.session.add(mc)
+            elif arg=='populatelog':
+                print('populating logging')
+                allquotes=quotes.query.all()
+                qlogs=[]
+                for q in allquotes:
+                    #print(q)
+                    qlogs.append(quote_logging(q.id,start_num=0))
+                db.session.add_all(qlogs)
                 db.session.commit()
-                print(mc)
-                ep=episodes(1,1,1,'epname','filename')
-                print(ep)
-                db.session.add(ep)
-                db.session.commit()
-                print(ep)
-                print(ep.id,mc.id)
-                q=quotes(ep.id,15,mc.id,'the user quote')
-                print(q)
-                db.session.add(q)
-                db.session.commit()
-                print(q)
-                print(q.character,q.episode)
+
             elif arg=='peek':# peek at database entries
                 print('peeking at db')
                 # currently only characters added
-                print((characters.query.all()))
-                print((episodes.query.all()))
-                print((quotes.query.all()))
+                #print((characters.query.all()))
+                print('episodes {}'.format(len(episodes.query.all())))
+                print('Quotes:{} first ten:{}'.format(len(quotes.query.all()),(quotes.query.all()[:10])))
                 print(quotes.query.all()[0].episode)
+                print('number of logs {}'.format(len(quote_logging.query.all())))
     else:
-        print('avaliable parameters: createdb, populatedb, peek')
+        print('avaliable parameters: createdb, populatelog, peek')
 
 if __name__=='__main__':
     main()

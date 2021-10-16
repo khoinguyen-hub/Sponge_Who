@@ -3,8 +3,8 @@
 
 from flask import Flask, request, render_template
 from flask_sqlalchemy import SQLAlchemy
-from quote_search import *
-from model import *
+from .quote_search import *
+from .model import *
 app = Flask(__name__)
 
 print(__name__)
@@ -36,7 +36,7 @@ def quote_generator():
             #     #print(str(x.character.name) + ": " + x.quote)
             #     print((characters.query.all()))
             #     print((episodes.query.all()))
-            return render_template('results.html', characterName=character, line=actualQuote)## might need to change html name
+            return render_template('results.html', characterName=character+' Season: '+str(result[0].episode.season)+' Episode: '+str(result[0].episode.episode), line=actualQuote)## might need to change html name
         else:
             return render_template("home.html") 
     else:  ## get method 
