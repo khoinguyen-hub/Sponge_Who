@@ -35,7 +35,7 @@ class Character(Base):
 	__tablename__ ='Famouse_Quotes'
 
 	famouse_quotes_id = Column(Integer(), primary_key = True)
-	name = Column(String(99))
+	quote = Column(String(99))
 
 if __name__ =="__main__":
 	engine = create_engine('sqlite:///PDB.db')
