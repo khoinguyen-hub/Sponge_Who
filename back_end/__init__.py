@@ -20,23 +20,17 @@ def quote_generator():
     if request.method=="POST":# Catch Post Form
         query = request.form['query']
         if query:
-            ### need to run these code on the first set up
-            # db.create_all()
-            # dict = parseTextFile()
-            # newdict = cleanDict(dict)
-            # populateDatabaseCharacters(newdict)
-            # populateDatabaseQuotes(newdict)
-            ###
             result = quotes.query.filter(quotes.quote.contains(query)).all()
-            character = result[0].character.name
-            actualQuote = result[0].quote
-            print("The quote is " + str(actualQuote))
-            print("The character is " + str(character))
-            # for x in result:
-            #     #print(str(x.character.name) + ": " + x.quote)
-            #     print((characters.query.all()))
-            #     print((episodes.query.all()))
-            return render_template('results.html', characterName=character+' Season: '+str(result[0].episode.season)+' Episode: '+str(result[0].episode.episode), line=actualQuote)## might need to change html name
+
+          
+            for x in result:
+                season = x.episode.season
+                episode = x.episode.episode
+                character = x.character.name
+                actualQuote = x.quote
+                print(f'season {season}; episode {episode}; character {character}; quote {actualQuote}')
+
+            return render_template('results.html', season = season, episode = episode, line = actualQuote, result = result)
         else:
             return render_template("home.html") 
     else:  ## get method 
