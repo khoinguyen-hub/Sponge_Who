@@ -1,6 +1,6 @@
 # Dawei Chen
 # local database creation
-# early databse schema design
+# databse schema design
 
 from sqlalchemy import *
 from sqlalchemy.ext.declarative import declarative_base
@@ -36,6 +36,12 @@ class Character(Base):
 
 	famouse_quotes_id = Column(Integer(), primary_key = True)
 	quote = Column(String(99))
+	
+class Icons(Base):
+	__tablename__ ='Icons'
+
+	icon_name = Column(String(99), primary_key = True)
+	icon = Column(BLOB)
 
 if __name__ =="__main__":
 	engine = create_engine('sqlite:///PDB.db')
