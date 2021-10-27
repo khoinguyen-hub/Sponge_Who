@@ -32,9 +32,10 @@ if 'app' not in dir():# set the app if run alone (not actually sure if this work
     app=Flask(__name__)
 
 # configurations
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False# remove tracking overhead
+#app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False# remove tracking overhead
 # set the name and path to the database
-app.config['SQLALCHEMY_DATABASE_URI']=environ['SQLALCHEMY_DATABASE_URI']# may autoset
+#app.config['SQLALCHEMY_DATABASE_URI']=environ['SQLALCHEMY_DATABASE_URI']# may autoset
+app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///sqlite3_Sponge_Who.db'
 db=SQLAlchemy(app)
 
 
