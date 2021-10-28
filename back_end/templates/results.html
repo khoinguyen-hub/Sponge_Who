@@ -22,14 +22,29 @@
         </row>
         <br>
         <row>
-            <div id="box1">
+            <table style="width:100%">
+                <tr>
+                  <th>Season</th>
+                  <th>Episode</th>
+                  <th>Character</th>
+                  <th>Quote</th>
+                </tr>
+                {% for row in data %} 
+                <tr>
+                    {% for cell in row %} 
+                     <td> {{cell}} </td>
+                    {% endfor %} 
+                </tr>
+                {% endfor %} 
+              </table>
+            <!-- <div id="box1">
                 <column>
                     <p>{{ characterName }}</p>
                 </column>
                 <column>
                     <p>{{ line }}</p>
                 </column>
-            </div>
+            </div> -->
         </row>
     </container>
 </body>
