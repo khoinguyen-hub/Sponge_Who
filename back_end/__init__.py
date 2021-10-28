@@ -7,6 +7,12 @@ from .quote_search import *
 from .model import *
 app = Flask(__name__)
 
+# combine lists into a tuple
+def merge(list1, list2, list3, list4):
+    mergedList= tuple(zip(list1, list2, list3, list4))
+    return mergedList
+
+
 print(__name__)
 #connecting to sql database
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False# remove tracking overhead
@@ -21,16 +27,23 @@ def quote_generator():
         query = request.form['query']
         if query:
             result = quotes.query.filter(quotes.quote.contains(query)).all()
-
-          
+            
+            # if query fails return to home page
+            if not result:
+                return render_template("home.html") 
+            season = []
+            episode = []
+            character = []
+            actualQuote = []
             for x in result:
-                season = x.episode.season
-                episode = x.episode.episode
-                character = x.character.name
-                actualQuote = x.quote
-                print(f'season {season}; episode {episode}; character {character}; quote {actualQuote}')
+                season.append(x.episode.season)
+                episode.append(x.episode.episode)
+                character.append(x.character.name)
+                actualQuote.append(x.quote)
+            
+            data = merge(season, episode, character, actualQuote)
 
-            return render_template('results.html', season = season, episode = episode, line = actualQuote, result = result)
+            return render_template('results.html', data = data)
         else:
             return render_template("home.html") 
     else:  ## get method 
