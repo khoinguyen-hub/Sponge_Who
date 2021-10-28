@@ -11,6 +11,7 @@
 # Notes:
 # -Full linting style and document not provided
 # -Now requires sqlalchemy db URI from environment variable 'SQLALCHEMY_DATABASE_URI'
+# -Be sure to match db session for updated variables
 
 # Imports:
 from sys import argv
@@ -69,7 +70,7 @@ class quotes(db.Model):# Stores information regarding character quotes
 
     episode=db.relationship("episodes",foreign_keys=[ep_id])
     character=db.relationship("characters",foreign_keys=[char_id])
-    logging=db.relationship("quote_logging", backref='quotes',primaryjoin="quotes.id == quote_logging.id")
+    logging=db.relationship("quote_logging", backref='quotes',primaryjoin="quotes.id == quote_logging.id", passive_deletes=True)
     def __init__(self,ep_id:int,l_num:int,character:int,quote:str):
         """Initialization for "quotes" sqlobject, requires(ep_id:int,l_num:int,character:int,quote:str)"""
         self.ep_id=ep_id
@@ -90,8 +91,6 @@ class characters(db.Model):# Stores information for characters, may require pseu
         self.name=name
     def __repr__(self):
         return '<{}:{} #{}>'.format(self.__tablename__,self.name,self.id)
-
-# The following models are experimental
 
 class quote_logging(db.Model):
     """quote_logging"""
@@ -123,6 +122,7 @@ class quote_logging(db.Model):
         """Returns number of searches"""
         return self.searches
 
+# The following models are experimental
 class user_query(db.Model):
     """User_query"""# store information regarding queries and user feedback?
     __tablename__='User_querys'
@@ -132,6 +132,7 @@ class user_query(db.Model):
     datetime=db.Column(db.DateTime())
     accurate=db.Column(db.Boolean())
 
+    #quote = relationship("quotes")
     def __init__(self):
         """Initialization for "user_query" sqlobject"""
         pass
@@ -139,7 +140,7 @@ class user_query(db.Model):
         return '<{}:{} #{}>'.format(self.__tablename__,self.name,self.id)
 
 def main():
-    """Main function"""
+    """Main function, provides some extra functions for development"""
     # running as standalone function for debugging, provides some basic options
     if len(argv):
 
@@ -148,16 +149,31 @@ def main():
                 print('creating database')
                 db.create_all()#create schemea
                 print('db should be created')
-            elif arg=='populatelog':
+            elif arg=='populatelog':# populates logging instances
                 print('populating logging')
                 allquotes=quotes.query.all()
+                generic_time_str="2021-10-15 17:55:44" #set them all the same
+                generic_time=datetime.strptime(generic_time_str,"%Y-%m-%d %H:%M:%S")
                 qlogs=[]
                 for q in allquotes:
-                    #print(q)
-                    qlogs.append(quote_logging(q.id,start_num=0))
+                    lg=quote_logging(q.id,start_num=0)
+                    lg.last_call=generic_time
+                    qlogs.append(lg)
                 db.session.add_all(qlogs)
                 db.session.commit()
-
+            elif arg=='resetlog':# reset logging data to generic state
+                print('resetting logging')
+                all_logs=quote_logging.query.all()
+                generic_time_str="2021-10-15 17:55:44" #set them all the same
+                generic_time=datetime.strptime(generic_time_str,"%Y-%m-%d %H:%M:%S")
+                qlogs=[]
+                for q in all_logs:
+                    #print(q)
+                    q.searches=0
+                    q.last_call=generic_time
+                    qlogs.append(q)
+                db.session.add_all(qlogs)
+                db.session.commit()
             elif arg=='peek':# peek at database entries
                 print('peeking at db')
                 # currently only characters added
@@ -166,6 +182,7 @@ def main():
                 print('Quotes:{} first ten:{}'.format(len(quotes.query.all()),(quotes.query.all()[:10])))
                 print(quotes.query.all()[0].episode)
                 print('number of logs {}'.format(len(quote_logging.query.all())))
+                print('number of quotes searched {}'.format(sum([ql.searches for ql in quote_logging.query.all()])))
     else:
         print('avaliable parameters: createdb, populatelog, peek')
 
