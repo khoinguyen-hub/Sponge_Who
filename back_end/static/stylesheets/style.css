@@ -32,7 +32,7 @@ body{
     margin:auto;
     margin-top:0em;
     padding:1em;
-    background: url('/static/resultsbgpattern.png'), repeat;
+    background: url('images/resultsbgpattern.png'), repeat;
     border-radius:20px;
     font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
 }
@@ -45,4 +45,19 @@ input[type=submit]{
     padding-left:0.7em;
     padding-right:0.7em;
     background:white;
+}
+
+table {
+    background: url('images/resultsbgpattern.png'), repeat;
+}
+
+th {
+    font-family: stl;
+    src: url(Some\ Time\ Later.otf);
+    font-size: 2.0em;
+    color: #99FFFF;
+}
+
+td {
+    color: #99FFFF;
 }

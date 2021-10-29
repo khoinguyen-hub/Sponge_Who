@@ -36,7 +36,8 @@ def quote_generator():
             
             # if query fails return to home page
             if not result:
-                return render_template("home.html")
+                message = "Unable find the qoute. Please re-enter a word or phrase."
+                return render_template("home.html", message = message)
 
             return redirect(url_for('result_page', query_final=query))
         else:
