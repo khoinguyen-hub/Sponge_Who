@@ -57,6 +57,7 @@
                 <div id="box1">
                 <center><h1>Sponge Who?</h1></center>
 		      <center><p>Enter a word or phrase to find a related quote from a SpongeBob episode.</p></center>
+              <center><p style="color:red;">{{message}}</p></center>
         <form action={{url_for("quote_generator")}} method="post" novalidate>
             <center><input type="text" id="quote" name="query" style="height:1.8em;width:auto;font-size:1em;margin-right:1em">
             <input type="submit" value="Search"></center>
