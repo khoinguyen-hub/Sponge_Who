@@ -2,9 +2,11 @@
 #Connecting flask
 
 from flask import Flask, request, render_template
+from flask.helpers import url_for
 from flask_sqlalchemy import SQLAlchemy
-from .quote_search import *
-from .model import *
+from werkzeug.utils import redirect
+from .functions import *
+from flask_paginate import Pagination, get_page_args
 app = Flask(__name__)
 
 # combine lists into a tuple
@@ -21,30 +23,34 @@ app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///sqlite3_Sponge_Who.db'
 db=SQLAlchemy(app)
 
 @app.route('/', methods=["GET","POST"])
+def populate():
+    populate_database()
+    return redirect(url_for('quote_generator'))
+
 @app.route('/home', methods=["GET","POST"])
 def quote_generator():
     if request.method=="POST":# Catch Post Form
         query = request.form['query']
         if query:
-            result = quotes.query.filter(quotes.quote.contains(query)).all()
+            result = grab_all_quotes(query)
             
             # if query fails return to home page
             if not result:
-                return render_template("home.html") 
-            season = []
-            episode = []
-            character = []
-            actualQuote = []
-            for x in result:
-                season.append(x.episode.season)
-                episode.append(x.episode.episode)
-                character.append(x.character.name)
-                actualQuote.append(x.quote)
-            
-            data = merge(season, episode, character, actualQuote)
+                return render_template("home.html")
 
-            return render_template('results.html', data = data)
+            return redirect(url_for('result_page', query_final=query))
         else:
             return render_template("home.html") 
     else:  ## get method 
         return render_template("home.html") 
+
+@app.route('/result/<query_final>')
+def result_page(query_final):
+    result = grab_all_quotes(query_final)
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    total = len(result)
+    paginate_datas = result[offset : offset + per_page]
+    data_tuple = store_all_quotes(result)
+    data_tuple = data_tuple[offset : offset + per_page]
+    paginate = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+    return render_template('results.html', datas=paginate_datas, page=page, per_page=per_page, paginate=paginate, data_tuple=data_tuple)
