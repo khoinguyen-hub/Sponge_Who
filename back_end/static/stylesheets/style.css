@@ -37,6 +37,11 @@ body{
     font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
 }
 
+.highlighted{
+	background-color: rgba(167,113,209,.7);
+    border-radius:20%;
+}
+
 input[type=submit]{
     font-family:"Trebuchet MS", sans-serif;
     font-size:1em;
