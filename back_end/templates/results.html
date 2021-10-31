@@ -108,7 +108,7 @@
                 <td>{{ data_tuple[loop.index-1][0] }}</td>
                 <td>{{ data_tuple[loop.index-1][1] }}</td>
                 <td>{{ data_tuple[loop.index-1][2] }}</td>
-                <td>{{ data_tuple[loop.index-1][3] }}</td>
+                <td><span>{{ data_tuple[loop.index-1][3][0] }}</span><span id="highlighted">{{ data_tuple[loop.index-1][3][1] }}</span><span>{{ data_tuple[loop.index-1][3][2] }}</span></td>
               </tr>
               {% endfor %}
             </tbody>
