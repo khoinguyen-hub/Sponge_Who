@@ -14,7 +14,6 @@ def merge(list1, list2, list3, list4):
     mergedList= tuple(zip(list1, list2, list3, list4))
     return mergedList
 
-
 print(__name__)
 #connecting to sql database
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False# remove tracking overhead
@@ -37,13 +36,13 @@ def quote_generator():
             # if query fails return to home page
             if not result:
                 message = "Unable find the qoute. Please re-enter a word or phrase."
-                return render_template("home.html", message = message)
+                return render_template("home.html", message = message, quote_of_the_day = getqod())
 
             return redirect(url_for('result_page', query_final=query))
         else:
-            return render_template("home.html") 
+            return render_template("home.html", quote_of_the_day = get_qod()) 
     else:  ## get method 
-        return render_template("home.html") 
+        return render_template("home.html", quote_of_the_day = get_qod()) 
 
 @app.route('/result/<query_final>')
 def result_page(query_final):
@@ -51,7 +50,7 @@ def result_page(query_final):
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     total = len(result)
     paginate_datas = result[offset : offset + per_page]
-    data_tuple = store_all_quotes(result)
+    data_tuple = store_all_quotes(result, query_final)
     data_tuple = data_tuple[offset : offset + per_page]
     paginate = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
     return render_template('results.html', datas=paginate_datas, page=page, per_page=per_page, paginate=paginate, data_tuple=data_tuple)

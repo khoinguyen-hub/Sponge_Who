@@ -4,6 +4,10 @@
 
 from os.path import exists as file_exists
 from .quote_search import *
+from sqlalchemy import func
+
+# Current Quote of the day
+qod=None
 
 #populate database if it doesn not exists
 def populate_database():
@@ -16,6 +20,26 @@ def populate_database():
         populateDatabaseCharacters(newdict)
         populateDatabaseQuotes(newdict)
 
+# Shane Hazelquist
+# Get the quote of the day, and update if stale
+def get_qod():
+    """returns quote of the day and updates stale qod"""
+    global qod
+    if not qod or qod.logging[0].time_since_last_call().days>=1:
+        res=db.session.query(quote_logging,func.max(quote_logging.searches)).first()[0]
+        qod=quotes.query.filter(quotes.id==res.id).first()
+        print('Updated Quote of the day:"{}"'.format(qod))
+    return qod.quote
+
+# Shane Hazelquist
+# Seperate quote into tuple for highlighting
+def highlight(query,quote):
+    """Seperate quote into tuple for highlighting"""
+    startindex=quote.find(query)
+    endindex=startindex+len(query)
+    # example quote[:startindex]+"<span id="highlighted">"+quote[startindex:endindex]+"</mark>"+quote[endindex:]
+    return (quote[:startindex],quote[startindex:endindex],quote[endindex:])
+
 # Grab all the quotes that contains user_input
 def grab_all_quotes(user_iput):
     return quotes.query.filter(quotes.quote.contains(user_iput)).all()
@@ -27,8 +51,9 @@ def merge(list1, list2, list3, list4):
     return mergedList
 
 # Seak Yith
+# Shane Hazelquist (query for highlighting and logging statement)
 # store all the quotes into a tuple for display
-def store_all_quotes(quotes):
+def store_all_quotes(quotes, query):
     season = []
     episode = []
     character = []
@@ -38,7 +63,10 @@ def store_all_quotes(quotes):
         season.append(x.episode.season)
         episode.append(x.episode.episode)
         character.append(x.character.name)
-        actualQuote.append(x.quote)
+        actualQuote.append(highlight(query,x.quote))
+        x.logging[0].inc()# increment log
+
+    db.session.commit()# save logging information to model session
 
     result_quotes = merge(season, episode, character, actualQuote)
 
