@@ -36,6 +36,8 @@ def get_qod():
 def highlight(query,quote):
     """Seperate quote into tuple for highlighting"""
     startindex=quote.lower().find(query.lower())
+    if startindex==-1:# exception, don't index to -1
+        return (quote,'','')
     endindex=startindex+len(query.lower())
     # example quote[:startindex]+"<span id="highlighted">"+quote[startindex:endindex]+"</mark>"+quote[endindex:]
     return (quote[:startindex],quote[startindex:endindex],quote[endindex:])
