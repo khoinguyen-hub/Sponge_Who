@@ -53,4 +53,4 @@ def result_page(query_final):
     data_tuple = store_all_quotes(result, query_final)
     data_tuple = data_tuple[offset : offset + per_page]
     paginate = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-    return render_template('results.html', datas=paginate_datas, page=page, per_page=per_page, paginate=paginate, data_tuple=data_tuple)
+    return render_template('results.html', datas=paginate_datas, page=page, per_page=per_page, paginate=paginate, data_tuple=data_tuple, chr_img_paths=chr_img_paths)

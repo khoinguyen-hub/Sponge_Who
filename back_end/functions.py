@@ -8,6 +8,8 @@ from sqlalchemy import func
 
 # Current Quote of the day
 qod=None
+# Character image paths
+chr_img_paths={"SpongeBob":"spongebobwindowspb.png","Patrick":"patrickwindowspb.png","Sandy":"sandywindowspb.png","Mr. Krabs":"mrkrabswindowspb.png"}
 
 #populate database if it doesn not exists
 def populate_database():
