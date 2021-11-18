@@ -1,12 +1,13 @@
 #Seak Yith
 #Connecting flask
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, Response
 from flask.helpers import url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import redirect
 from .functions import *
 from flask_paginate import Pagination, get_page_args
+from json import dumps
 app = Flask(__name__)
 
 # combine lists into a tuple
@@ -54,3 +55,20 @@ def result_page(query_final):
     data_tuple = data_tuple[offset : offset + per_page]
     paginate = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
     return render_template('results.html', datas=paginate_datas, page=page, per_page=per_page, paginate=paginate, data_tuple=data_tuple, chr_img_paths=chr_img_paths)
+
+
+@app.route('/api/',methods=['GET'])
+def apidoc():
+    """Method for serving the documentation for the api"""
+    return "serving api documentation"
+
+@app.route('/api/<query>',methods=['GET'])
+def apihome(query):
+    """Method for serving the api"""
+    try:
+        res=db.session.query(query).all()
+        db.session.rollback()# prevent injections on thread
+        api_result=dumps(res)
+        return api_result
+    except:
+        return Response(response="Bad_query",status=400)
