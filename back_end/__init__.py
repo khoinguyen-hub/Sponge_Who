@@ -1,14 +1,20 @@
 #Seak Yith
+#Daiwei Chen
 #Connecting flask
+#Adding RestAPI
 
-from flask import Flask, request, render_template, Response
+from flask import Flask, request, render_template
 from flask.helpers import url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import redirect
 from .functions import *
 from flask_paginate import Pagination, get_page_args
-from json import dumps
+# importing flask_restful 
+from flask_restful import Resource, Api, reqparse, abort
+
 app = Flask(__name__)
+# adding API
+api = Api(app)
 
 # combine lists into a tuple
 def merge(list1, list2, list3, list4):
@@ -56,19 +62,12 @@ def result_page(query_final):
     paginate = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
     return render_template('results.html', datas=paginate_datas, page=page, per_page=per_page, paginate=paginate, data_tuple=data_tuple, chr_img_paths=chr_img_paths)
 
+# Api classes
+class HomeEndPoint(Resource):
+    def get(self):
+        return {'data':'Welcome to HomePage'}
 
-@app.route('/api/',methods=['GET'])
-def apidoc():
-    """Method for serving the documentation for the api"""
-    return "serving api documentation"
+api.add_resource(HomeEndPoint, '/WelcomeToHomePage')
 
-@app.route('/api/<query>',methods=['GET'])
-def apihome(query):
-    """Method for serving the api"""
-    try:
-        res=db.session.query(query).all()
-        db.session.rollback()# prevent injections on thread
-        api_result=dumps(res)
-        return api_result
-    except:
-        return Response(response="Bad_query",status=400)
+if __name__ == '__main__':
+    app.run(debug=True)
