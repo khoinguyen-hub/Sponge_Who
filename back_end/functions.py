@@ -5,6 +5,7 @@
 from os.path import exists as file_exists
 from .quote_search import *
 from sqlalchemy import func
+from gtts import gTTS
 
 # Current Quote of the day
 qod=None
@@ -82,3 +83,14 @@ def page_number(number, per_page):
     else:
         page_number = int(number/per_page) + 1
     return page_number
+
+#Khoi Nguyen
+#Generate audio file for a set of quotes
+def audio_generator(texts):
+    index = 0
+    for text in texts:
+        tts = gTTS(text.quote, lang='en')
+        file = "static/sound" + str(index) + ".mp3"
+        with open(file, 'wb') as f:
+            tts.write_to_fp(f)
+            index += 1
