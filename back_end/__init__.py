@@ -1,5 +1,8 @@
-#Seak Yith, Khoi Nguyen
+#Seak Yith
+#Khoi Nguyen
+#Daiwei Chen
 #Connecting flask
+#Adding RestAPI
 
 from flask import Flask, request, render_template
 from flask.helpers import url_for
@@ -7,7 +10,12 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import redirect
 from .functions import *
 from flask_paginate import Pagination, get_page_args
+# importing flask_restful 
+from flask_restful import Resource, Api, reqparse, abort
+
 app = Flask(__name__)
+# adding API
+api = Api(app)
 
 # combine lists into a tuple
 def merge(list1, list2, list3, list4):
@@ -56,3 +64,13 @@ def result_page(query_final):
     audio_generator(paginate_datas)
     songs = os.listdir('static/')
     return render_template('results.html', datas=paginate_datas, page=page, per_page=per_page, paginate=paginate, data_tuple=data_tuple, chr_img_paths=chr_img_paths, songs=songs)
+
+# Api classes
+class HomeEndPoint(Resource):
+    def get(self):
+        return {'data':'Welcome to HomePage'}
+
+api.add_resource(HomeEndPoint, '/WelcomeToHomePage')
+
+if __name__ == '__main__':
+    app.run(debug=True)
