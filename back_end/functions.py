@@ -90,7 +90,7 @@ def audio_generator(texts):
     index = 0
     for text in texts:
         tts = gTTS(text.quote, lang='en')
-        file = "static/sound" + str(index) + ".mp3"
+        file = "static/sounds/sound" + str(index) + ".mp3"
         with open(file, 'wb') as f:
             tts.write_to_fp(f)
             index += 1
