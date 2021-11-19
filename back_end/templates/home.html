@@ -86,6 +86,7 @@
                 margin:2em;
             }
             body{
+                background-image: linear-gradient(#034A3A,#137352,#034A3A);
                 margin:3em;
                 font-family:"Trebuchet MS", Arial, Helvetica, sans-serif
             }
@@ -166,17 +167,32 @@
             <button type="button" class="collapsible">Click to filter by character</button>
             <div class="alignRow content">
 <div class="imageColumn">
-<img src="/static/spongebobwindowspb.png" alt="SpongeBob" style="width:50%">
-</select>
+<input type="checkbox" id="filterSpongeBob" />
+<label for="filterSpongeBob"><img src="/static/spongebobwindowspb.png" style="width:50%"/></label>
 </div>
 <div class="imageColumn">
-<img src="/static/patrickwindowspb.png" alt="Patrick" style="width:50%">
+<input type="checkbox" id="filterPatrick" />
+<label for="filterPatrick"><img src="/static/patrickwindowspb.png" style="width:50%"/></label>
 </div>
 <div class="imageColumn">
-<img src="/static/mrkrabswindowspb.png" alt="Mr. Krabs" style="width:50%">
+<input type="checkbox" id="filterSquidward" />
+<label for="filterSquidward"><img src="/static/squidwardwindowspb.png" style="width:50%"/></label>
 </div>
 <div class="imageColumn">
-<img src="/static/sandywindowspb.png" alt="Sandy" style="width:50%">
+<input type="checkbox" id="filterMrKrabs" />
+<label for="filterMrKrabs"><img src="/static/mrkrabswindowspb.png" style="width:50%"/></label>
+</div>
+                <div class="imageColumn">
+<input type="checkbox" id="filterSandy" />
+<label for="filterSandy"><img src="/static/sandywindowspb.png" style="width:50%"/></label>
+</div>
+                <div class="imageColumn">
+<input type="checkbox" id="filterPlankton" />
+<label for="filterPlankton"><img src="/static/planktonwindowspb.png" style="width:50%"/></label>
+</div>
+                <div class="imageColumn">
+<input type="checkbox" id="filterPearl" />
+<label for="filterPearl"><img src="/static/pearlwindowspb.png" style="width:50%"/></label>
 </div>
 </div>>
         </form> 
@@ -202,7 +218,7 @@ for (i = 0; i < coll.length; i++) {
         box1.style.height = "52%";
       content.style.display = "none";
     } else {
-        box1.style.height = "108%";
+        box1.style.height = "128%";
       content.style.display = "block";
     }
   });
