@@ -4,7 +4,7 @@
 #Connecting flask
 #Adding RestAPI
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, Response
 from flask.helpers import url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import redirect
@@ -70,7 +70,20 @@ class HomeEndPoint(Resource):
     def get(self):
         return {'data':'Welcome to HomePage'}
 
+class apihome(Resource):
+    """Method for serving the api"""
+    def get(self, query):
+        try:
+            res=db.session.query(query).all()
+            db.session.rollback()
+            return {'query':'SELECT '+query,'queryresult':res}
+        except:
+            return Response(response="Bad_query",status=400)
+    def put(self, query):
+        return Response(response="Bad_query",status=400)
+
 api.add_resource(HomeEndPoint, '/WelcomeToHomePage')
+api.add_resource(apihome,'/api/<string:query>')
 
 if __name__ == '__main__':
     app.run(debug=True)
