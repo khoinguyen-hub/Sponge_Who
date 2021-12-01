@@ -1,6 +1,7 @@
 #Seak Yith
 #Khoi Nguyen
 #Daiwei Chen
+#Shane Hazelquist
 #Connecting flask
 #Adding RestAPI
 
@@ -12,6 +13,7 @@ from .functions import *
 from flask_paginate import Pagination, get_page_args
 # importing flask_restful 
 from flask_restful import Resource, Api, reqparse, abort
+from sqlalchemy import desc, and_
 
 app = Flask(__name__)
 # adding API
@@ -65,12 +67,19 @@ def result_page(query_final):
     songs = os.listdir('static/sounds/')
     return render_template('results.html', datas=paginate_datas, page=page, per_page=per_page, paginate=paginate, data_tuple=data_tuple, chr_img_paths=chr_img_paths, songs=songs)
 
-# Api classes
+# API doc route
+@app.route('/api_documentation',methods=["GET"])
+def documentation_page():
+    """ method for serving readable documentation"""
+    # load api_doc.txt and pass to template
+    return
+
+# API classes
 class HomeEndPoint(Resource):
     def get(self):
         return {'data':'Welcome to HomePage'}
 
-class apihome(Resource):
+class api_query(Resource):
     """Method for serving the api"""
     def get(self, query):
         try:
@@ -78,12 +87,70 @@ class apihome(Resource):
             db.session.rollback()
             return {'query':'SELECT '+query,'queryresult':res}
         except:
-            return Response(response="Bad_query",status=400)
+            return Response(response="Bad_query:'SELECT {}'".format(query),status=400)
     def put(self, query):
-        return Response(response="Bad_query",status=400)
+        return Response(response="Bad_query:'SELECT {}'".format(query),status=400)
+
+class api_popular(Resource):# qod on get
+    """api object for serving quotes based on popularity"""
+    def put(self):
+        """Serve N most popular quotes"""
+        try:
+            count=int(request.form['count'])
+            ids=[s[0] for s in db.session.query(quote_logging.id).order_by(desc(quote_logging.searches)).limit(count).all()]
+            return [{'character':q.character.name,'quote_id':q.id,'quote':q.quote} for q in db.session.query(quotes).filter(quotes.id.in_(ids)).all()]
+        except:
+            return Response(response="Bad_query",status=400)
+    def get(self):
+        """Serves quote of the day as most popular quote"""
+        return [get_qod()]
+
+class api_script(Resource):
+    """api object for serving scripts of episodes"""
+    def put(self):
+        """Serve script given episode number information"""
+        try:
+            season=int(request.form['season'])
+            episode=int(request.form['episode'])
+            minor=int(request.form['minor'])
+            ids=db.session.query(episodes.id).filter(episodes.season==season).filter(episodes.episode==episode).filter(episodes.minor_ep==minor).first()[0]
+            qs=db.session.query(characters.name,quotes.quote).filter(quotes.ep_id==ids).filter(characters.id==quotes.char_id).all()#
+            return qs
+        except:
+            return Response(response="Bad_query",status=400)
+
+class api_sponge_who(Resource):
+    def put(self):
+        """Serve quote information from quote guess"""
+        try:
+            subquote=request.form['quote_guess']
+            result=grab_all_quotes(subquote)
+            if not result:
+                return [None]
+            return [{'season':q.episode.season,'episode':q.episode.episode,'minor':q.episode.minor_ep,'character':q.character.name,'quote_id':q.id,'quote':q.quote} for q in result]
+        except:
+            return Response(response="Bad_query:'SELECT {}'".format(query),status=400)
+
+class api_voiceline(Resource):
+    """api object for serving tts quotes""" #currently broken, figuring out how to send file
+    def put(self):
+        """Serve tts quotes"""
+        #try:
+        # guess, voicelines out
+        qid=int(request.form['quote_id'])
+        res=db.session.query(quotes.quote).filter(quotes.id==qid).first()
+        voice=gTTS(res, lang='en')
+        voice.save('api_req_')
+        return #[q.quote for q in res]
+        #except:
+        #    return Response(response="Bad_query:'SELECT {}'".format(query),status=400)
 
 api.add_resource(HomeEndPoint, '/WelcomeToHomePage')
-api.add_resource(apihome,'/api/<string:query>')
+api.add_resource(api_query,'/api_query/<string:query>')
+api.add_resource(api_popular,'/api_popular')
+api.add_resource(api_script,'/api_script')
+api.add_resource(api_voiceline,'/api_voiceline')
+api.add_resource(api_sponge_who,'/api_sponge_who')
 
 if __name__ == '__main__':
     app.run(debug=True)
