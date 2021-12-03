@@ -14,6 +14,7 @@ from flask_paginate import Pagination, get_page_args
 # importing flask_restful 
 from flask_restful import Resource, Api, reqparse, abort
 from sqlalchemy import desc, and_
+import json
 
 app = Flask(__name__)
 # adding API
@@ -72,7 +73,9 @@ def result_page(query_final):
 def documentation_page():
     """ method for serving readable documentation"""
     # load api_doc.txt and pass to template
-    return
+    with open('static/api_doc.json') as doc_dataf:
+        return  render_template('API_home.html', api_doc=json.load(doc_dataf))
+    return Response(status=500)
 
 # API classes
 class HomeEndPoint(Resource):
