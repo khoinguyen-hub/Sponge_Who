@@ -1,5 +1,6 @@
 Flask
 SQLAlchemy
+Flask-SQLAlchemy
 Werkzeug
 Flask-Paginate
 Flask-Restful
