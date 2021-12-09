@@ -5,3 +5,4 @@ Flask-Paginate
 Flask-Restful
 bs4
 datetime
+gunicorn
