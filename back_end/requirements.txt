@@ -1,0 +1,7 @@
+Flask
+SQLAlchemy
+Werkzeug
+Flask-Paginate
+Flask-Restful
+bs4
+datetime
