@@ -14,6 +14,7 @@ from flask_paginate import Pagination, get_page_args
 # importing flask_restful 
 from flask_restful import Resource, Api, reqparse, abort
 from sqlalchemy import desc, and_
+from random import randrange
 import json
 
 app = Flask(__name__)
@@ -84,15 +85,15 @@ class HomeEndPoint(Resource):
 
 class api_query(Resource):
     """Method for serving the api"""
-    def get(self, query):
+    def put(self):
+        """method for serving queries"""
         try:
+            query=request.form['query']
             res=db.session.query(query).all()
             db.session.rollback()
             return {'query':'SELECT '+query,'queryresult':res}
         except:
             return Response(response="Bad_query:'SELECT {}'".format(query),status=400)
-    def put(self, query):
-        return Response(response="Bad_query:'SELECT {}'".format(query),status=400)
 
 class api_popular(Resource):# qod on get
     """api object for serving quotes based on popularity"""
@@ -123,6 +124,7 @@ class api_script(Resource):
             return Response(response="Bad_query",status=400)
 
 class api_sponge_who(Resource):
+    """api object for serving sponge who functionality"""
     def put(self):
         """Serve quote information from quote guess"""
         try:
@@ -133,6 +135,12 @@ class api_sponge_who(Resource):
             return [{'season':q.episode.season,'episode':q.episode.episode,'minor':q.episode.minor_ep,'character':q.character.name,'quote_id':q.id,'quote':q.quote} for q in result]
         except:
             return Response(response="Bad_query:'SELECT {}'".format(query),status=400)
+
+class api_random(Resource):
+    """api object for serving random quote"""
+    def get(self):
+        """randomly selects a quote from static range"""
+        return {'quote':db.session.query(quotes.quote).filter(quotes.id==randrange(1,54178)).first()[0]}
 
 class api_voiceline(Resource):
     """api object for serving tts quotes""" #currently broken, figuring out how to send file
@@ -149,10 +157,10 @@ class api_voiceline(Resource):
         #    return Response(response="Bad_query:'SELECT {}'".format(query),status=400)
 
 api.add_resource(HomeEndPoint, '/WelcomeToHomePage')
-api.add_resource(api_query,'/api_query/<string:query>')
+api.add_resource(api_query,'/api_query')
 api.add_resource(api_popular,'/api_popular')
 api.add_resource(api_script,'/api_script')
-api.add_resource(api_voiceline,'/api_voiceline')
+api.add_resource(api_random,'/api_random')
 api.add_resource(api_sponge_who,'/api_sponge_who')
 
 if __name__ == '__main__':

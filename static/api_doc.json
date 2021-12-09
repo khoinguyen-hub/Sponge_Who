@@ -27,23 +27,23 @@
 			"WelcomeToHomePage":{
 					"description":"Simple home test endpoint",
 					"methods":"get",
-					"dataformat":" ",
+					"dataformat":"None",
 					"returns":"string",
 					"example":"get('https://sponge-who.herokuapp.com/WelcomeToHomePage').json()"
 			},
 			"api_query":{
 					"description":"Endpoint for serving select queries",
-					"methods":"get",
+					"methods":"put",
 					"dataformat":"SQL select query",
 					"returns":"depends on query",
-					"example":"get('https://sponge-who.herokuapp.com/api_query/name FROM characters')"
+					"example":"put('https://sponge-who.herokuapp.com/api_query',data={'query':'name FROM Characters'}).json()"
 			},
 			"api_popular":{
 					"description":"Retrieve N quotes in order of popularity",
 					"methods":"get, put",
 					"dataformat":"dictionary:{'count':int}",
 					"returns":"list:[{'character':string,'quote_id':int,'quote':string}]",
-					"example":"put('https://sponge-who.herokuapp.com/api_popular,data={'count':10}).json()"
+					"example":"put('https://sponge-who.herokuapp.com/api_popular',data={'count':10}).json()"
 
 			},
 			"api_script":{
@@ -60,6 +60,13 @@
 					"dataformat":"dictionary:{'quote_guess':'quote substring input'}",
 					"returns":"list:[dictonary:{'season':int,'episode':int,'minor':int,'character':string,'quote_id':int,'quote':string}]",
 					"example":"put('https://sponge-who.herokuapp.com/api_sponge_who',data={'quote_guess':'toad'}).json()"
+			},
+			"api_random":{
+					"description":"Get random quote",
+					"methods":"get",
+					"dataformat":"None",
+					"returns":"dictionary:{'quote':string}",
+					"example":"get('https://sponge-who.herokuapp.com/api_random').json()"
 			}
 		}
 }
