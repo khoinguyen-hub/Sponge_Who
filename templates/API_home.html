@@ -1,0 +1,247 @@
+<!-- author: Omar Mughal Style -->
+<!-- author: Daiwei Chen Loading animation -->
+<!-- author: Shane Hazelquist, Main content -->
+<html>
+    <head>
+
+        <!-- loader animation -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+        /* center the loader */
+        #loader {
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          z-index: 1;
+          width: 120px;
+          height: 120px;
+          margin: -76px 0 0 -76px;
+          border: 16px solid #F7EA48;
+          border-radius: 15%;
+          border-top: 16px solid #3498db;
+          -webkit-animation: spin 2s linear infinite;
+          animation: spin 2s linear infinite;
+        }
+
+        @-webkit-keyframes spin {
+          0% { -webkit-transform: rotate(0deg); }
+          100% { -webkit-transform: rotate(360deg); }
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        /* Add animation to "page content" */
+        .animate-bottom {
+          position: relative;
+          -webkit-animation-name: animatebottom;
+          -webkit-animation-duration: 1s;
+          animation-name: animatebottom;
+          animation-duration: 1s
+        }
+
+        @-webkit-keyframes animatebottom {
+          from { bottom:-100px; opacity:0 } 
+          to { bottom:0px; opacity:1 }
+        }
+
+        @keyframes animatebottom { 
+          from{ bottom:-100px; opacity:0 } 
+          to{ bottom:0; opacity:1 }
+        }
+
+        #myDiv {
+          display: none;
+          text-align: center;
+        }
+        </style>
+
+        </head>
+        <body onload="myFunction()" style="margin:0;">
+
+        <div id="loader"></div>
+
+        <div style="display:none;" id="myDiv" class="animate-bottom">
+        <!-- loader animation -->
+
+
+
+        <!-- Title Page -->
+
+        <title>Sponge Who?</title>
+        <style type="text/css">
+            @font-face{font-family:Some Time Later;src:url("/static/Some Time Later.otf");}
+            h1{
+                color:white;
+                font-family:Some Time Later;
+                font-size:5em;
+                margin:0.5em;
+            }
+            h2{
+                color:white;
+                font-family:Some Time Later;
+                font-size:3em;
+                margin:0.5em;
+            }
+			h3{
+                color:white;
+                font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+            }
+			p{
+                color:white;
+                font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+                font-size:1.3em;
+                margin:2em;
+            }
+			
+			th{
+                color:white;
+                font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+                margin:2em;
+            }
+			td{
+                color:white;
+                font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+                margin:2em;
+				border:1px solid white;
+            }
+
+            body{
+                background-image: linear-gradient(#034A3A,#137352,#034A3A);
+                margin:3em;
+                font-family:"Trebuchet MS", Arial, Helvetica, sans-serif
+            }
+            #box1{
+                width:90%;
+                height:52%;
+                margin:auto;
+                margin-top:0em;
+                margin-bottom:1em;
+                padding:1em;
+                background:url('/static/spongebobpattern.png') repeat;
+                border-radius:20px;
+            }
+            #box2{
+                width:90%;
+                height:20%;
+                margin-top:1em;
+                margin:auto;
+                padding:1em;
+                background:#AE8C06;
+                border-radius:20px;
+            }
+            #box3{
+                width:90%;
+                height:auto;
+                margin:auto;
+                margin-top:0em;
+                margin-bottom:1em;
+                padding:1em;
+                background:url('/static/spongebobpattern.png') repeat;
+                border-radius:20px;
+            }
+			filter {
+    display:table;
+    margin: 0 auto;
+    
+}
+            .imageColumn {
+   float: left;
+   width: 25%;
+   padding: 10px;
+}
+            /* Style the button that is used to open and close the collapsible content */
+.collapsible {
+  background-color: #AE7504;
+  color: #fff;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+            .active, .collapsible:hover {
+  background-color: #9E6500;
+}
+            .content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #AE8C06;
+}
+        </style>
+    </head>
+    <body style="background-image: linear-gradient(#034A3A,#137352,#034A3A)">
+        <div id="container">
+            <div id="row">
+                <img src="/static/spongebobpeek.png" width="200" height=auto style="margin-left:auto;margin-right:auto;display:block">
+                <div id="box3">
+                <center><h1>Sponge Who?</h1></center>
+		      <center><h3>API documentation</h3></center>
+		      <center><p>Summary of endpoints and dataformats, examples written in python using the 'requests' module.</p></center>
+              <center><p style="color:red;">{{message}}</p></center>
+			</div>
+		</div>
+		<div id="container">
+			<!-- tables serving api documentation 1 for each endpoint, 1 for schema -->
+			<div id="box3">
+			<h2>Endpoints</h2>
+			{% for keyname in api_doc["endpoints"].keys() %}
+			<h3>{{ keyname }}</h3>
+			<center><table>
+				<tr>
+				{% for item in api_doc["endpoints"][keyname] %}
+						<th>{{ item }}</th>
+				{% endfor %}
+				</tr>
+				<tr>
+				{% for item in api_doc["endpoints"][keyname] %}
+						<td>{{ api_doc["endpoints"][keyname][item] }}</td>
+				{% endfor %}
+				</tr>
+			</table></center>
+			{% endfor %}
+			</div>
+			<div id="box3">
+			<h2>Database Schema</h2>
+			{% for tablename in api_doc["Schema_tables"] %}
+			<center><table>
+				<tr>
+				<!-- colspan=" len(api_doc["Schema_tables"][tablename]) " -->
+				<th>{{ tablename }}</th>
+				</tr>
+				<tr>
+				{% for item in api_doc["Schema_tables"][tablename] %}
+						<td>{{ item[0] }}</td>
+				{% endfor %}
+				</tr>
+				{% for item in api_doc["Schema_tables"][tablename] %}
+						<td>{{ item[1] }}</td>
+				{% endfor %}
+				</tr>
+			</table></center>
+			{% endfor %}
+			</div>
+		</div>
+    
+        <!-- Loader script -->
+        <script>
+        var myVar;
+
+        function myFunction() {
+        myVar = setTimeout(showPage, 1000);
+        }
+
+        function showPage() {
+        document.getElementById("loader").style.display = "none";
+        document.getElementById("myDiv").style.display = "block";
+        }
+        </script>
+        <!-- Loader script -->
+
+    </body>
+</html>

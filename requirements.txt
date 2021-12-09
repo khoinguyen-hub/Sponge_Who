@@ -6,3 +6,4 @@ Flask-Restful
 bs4
 datetime
 gunicorn
+gtts
