@@ -3,7 +3,7 @@
 # cluster in the view
 
 from os.path import exists as file_exists
-from .quote_search import *
+from quote_search import *
 from sqlalchemy import func
 from gtts import gTTS
 

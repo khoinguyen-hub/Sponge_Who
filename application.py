@@ -9,7 +9,7 @@ from flask import Flask, request, render_template, Response
 from flask.helpers import url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import redirect
-from .functions import *
+from functions import *
 from flask_paginate import Pagination, get_page_args
 # importing flask_restful 
 from flask_restful import Resource, Api, reqparse, abort
