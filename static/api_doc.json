@@ -1,0 +1,72 @@
+{		
+	"Schema_tables":{
+		"Episodes":[
+				["id"," "],
+				["season"," season number"],
+				["episode"," episode number"],
+				["minor_ep"," minor episode number"],
+				["ep_name"," Episode name"]
+		],
+		"Quotes":[
+				["id"," "],
+				["ep_id","references Episodes.id"],
+				["char_id","references Characters.id"],
+				["quote","spoken line"]
+		],
+		"Characters":[
+				["id"," "],
+				["name","character name"]
+		],
+		"Quote_logging":[
+				["id","refrences Quotes.id"],
+				["searches","number of searches"],
+				["last_call","last datetime"]
+		]
+	},
+	"endpoints":{
+			"WelcomeToHomePage":{
+					"description":"Simple home test endpoint",
+					"methods":"get",
+					"dataformat":"None",
+					"returns":"string",
+					"example":"get('https://sponge-who.herokuapp.com/WelcomeToHomePage').json()"
+			},
+			"api_query":{
+					"description":"Endpoint for serving select queries",
+					"methods":"put",
+					"dataformat":"SQL select query",
+					"returns":"depends on query",
+					"example":"put('https://sponge-who.herokuapp.com/api_query',data={'query':'name FROM Characters'}).json()"
+			},
+			"api_popular":{
+					"description":"Retrieve N quotes in order of popularity",
+					"methods":"get, put",
+					"dataformat":"dictionary:{'count':int}",
+					"returns":"list:[{'character':string,'quote_id':int,'quote':string}]",
+					"example":"put('https://sponge-who.herokuapp.com/api_popular',data={'count':10}).json()"
+
+			},
+			"api_script":{
+					"description":"Retrieve the entire script of an episode",
+					"methods":"put",
+					"dataformat":"dictionary:{'season':int,'episode':int,'minor':int}",
+					"returns":"list:[['character':string,'quote':string]]",
+					"example":"put('https://sponge-who.herokuapp.com/api_script',data={'season':'1','episode':'1','minor':'1'}).json()"
+
+			},
+			"api_sponge_who":{
+					"description":"API version of basic product",
+					"methods":"put",
+					"dataformat":"dictionary:{'quote_guess':'quote substring input'}",
+					"returns":"list:[dictonary:{'season':int,'episode':int,'minor':int,'character':string,'quote_id':int,'quote':string}]",
+					"example":"put('https://sponge-who.herokuapp.com/api_sponge_who',data={'quote_guess':'toad'}).json()"
+			},
+			"api_random":{
+					"description":"Get random quote",
+					"methods":"get",
+					"dataformat":"None",
+					"returns":"dictionary:{'quote':string}",
+					"example":"get('https://sponge-who.herokuapp.com/api_random').json()"
+			}
+		}
+}
