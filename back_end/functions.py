@@ -6,6 +6,7 @@ from os.path import exists as file_exists
 from .quote_search import *
 from sqlalchemy import func
 from gtts import gTTS
+from flask_sqlalchemy import SQLAlchemy
 
 # Current Quote of the day
 qod=None
@@ -49,6 +50,13 @@ def highlight(query,quote):
 def grab_all_quotes(user_iput):
     return quotes.query.filter(quotes.quote.contains(user_iput)).all()
 
+#Seak Yith
+#grab qoute by character
+def quoteByCharacter(character, user_input):
+    print("in function ", character[0])
+
+    return quotes.query.filter(quotes.char_id.in_(character),quotes.quote.contains(user_input)).all()
+    #return quotes.query.filter(characters.name.in_(character),quotes.quote.contains(user_input)).all()
 # Seak Yith
 # combine lists into a tuple
 def merge(list1, list2, list3, list4):
@@ -77,6 +85,25 @@ def store_all_quotes(quotes, query):
 
     return result_quotes
 
+def store_all_quotes_for_charac(quotes, query):
+    season = []
+    episode = []
+    character = []
+    actualQuote = []
+
+    for qoute in quotes:
+        for x in qoute:
+            season.append(x.episode.season)
+            episode.append(x.episode.episode)
+            character.append(x.character.name)
+            actualQuote.append(highlight(query,x.quote))
+            x.logging[0].inc()# increment log
+
+    db.session.commit()# save logging information to model session
+
+    result_quotes = merge(season, episode, character, actualQuote)
+
+    return result_quotes
 def page_number(number, per_page):
     if number % per_page == 0:
         page_number = int(number/per_page)
@@ -94,3 +121,14 @@ def audio_generator(texts):
         with open(file, 'wb') as f:
             tts.write_to_fp(f)
             index += 1
+
+def audio_generator_for_char(texts):
+    index = 0
+    for x in texts:
+        for text in x:
+            tts = gTTS(text.quote, lang='en')
+            file = "static/sounds/sound" + str(index) + ".mp3"
+            with open(file, 'wb') as f:
+                tts.write_to_fp(f)
+                index += 1
+
