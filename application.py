@@ -43,14 +43,17 @@ def quote_generator():
     if request.method=="POST":# Catch Post Form
         query = request.form['query']
         if query:
+            filterCharacters = request.form.getlist("characterCheckBox")
             result = grab_all_quotes(query)
             
             # if query fails return to home page
             if not result:
-                message = "Unable find the qoute. Please re-enter a word or phrase."
+                message = "Unable to find the qoute. Please re-enter a word or phrase."
                 return render_template("home.html", message = message, quote_of_the_day = get_qod())
-
-            return redirect(url_for('result_page', query_final=query))
+            if not filterCharacters:
+                return redirect(url_for('result_page', query_final=query))
+            else:
+                return redirect(url_for('result_pageWithFilter', query_final=query, characterList = filterCharacters))
         else:
             return render_template("home.html", quote_of_the_day = get_qod()) 
     else:  ## get method 
@@ -77,6 +80,30 @@ def documentation_page():
     with open('static/api_doc.json') as doc_dataf:
         return  render_template('API_home.html', api_doc=json.load(doc_dataf))
     return Response(status=500)
+
+@app.route('/result/<query_final>/<characterList>')
+def result_pageWithFilter(query_final, characterList):
+    print("second result page")
+    # result = []
+    # for character in characterList:
+    #     tempresult = (quoteByCharacter(character))
+    #     result.append(tempresult)
+    print(characterList)
+    print("size", len(characterList))
+    result = quoteByCharacter(characterList, query_final)
+    if not result:
+        message = "Unable to find the qoute. Please re-enter a word or phrase or re-select characters"
+        return render_template("home.html", message = message, quote_of_the_day = get_qod())
+
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    total = len(result)
+    paginate_datas = result[offset : offset + per_page]
+    data_tuple = store_all_quotes(result, query_final)
+    data_tuple = data_tuple[offset : offset + per_page]
+    paginate = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+    audio_generator(paginate_datas)
+    songs = os.listdir('static/sounds/')
+    return render_template('results.html', datas=paginate_datas, page=page, per_page=per_page, paginate=paginate, data_tuple=data_tuple, chr_img_paths=chr_img_paths, songs=songs)
 
 # API classes
 class HomeEndPoint(Resource):

@@ -76,6 +76,14 @@ def store_all_quotes(quotes, query):
     result_quotes = merge(season, episode, character, actualQuote)
 
     return result_quotes
+#Seak Yith
+#grab qoute by character
+def quoteByCharacter(character, user_input):
+    print("in function ", character[0])
+
+    return quotes.query.filter(quotes.char_id.in_(character),quotes.quote.contains(user_input)).all()
+    #return 
+
 
 def page_number(number, per_page):
     if number % per_page == 0:
