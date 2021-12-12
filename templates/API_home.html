@@ -227,6 +227,43 @@
 			{% endfor %}
 			</div>
 		</div>
+	    
+	            <!-- adding api client -->
+
+        <head>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        </head>
+        <h2>API Call Client</h2>
+        <h2>Open API Data Fetched:</h2>
+        <body>
+        <div class="mypanel"></div>
+
+        <script>
+        $.getJSON('http://time.jsontest.com', function(data) {
+
+            var text = `Date: ${data.date}<br>
+                        Time: ${data.time}<br>`
+
+
+            $(".mypanel").html(text);
+        });
+
+        </script>
+        <h2>Other Group Data Set Fetched:</h2>
+        <div class="mypanel2"></div>
+        <script>
+        $.getJSON('https://canvasbotapi.herokuapp.com/assignments', function(data) {
+
+        var text2 = `Date: ${data.data}<br>
+                    `
+
+
+        $(".mypanel2").html(text);
+        });
+        </script>
+		
+	 <!-- adding api client -->
+		
     
         <!-- Loader script -->
         <script>
